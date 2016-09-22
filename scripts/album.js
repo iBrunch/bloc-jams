@@ -33,7 +33,7 @@ var albumTuring = {
     artist: 'Alan Turing',
     label: 'Bletchley Park',
     year: '1940',
-    albumArtUrl: 'assets/images/album_covers/20.png',
+    albumArtUrl: 'assets/images/album_covers/enigma.jpg',
     songs: [
         { title: 'GCDSE AHUGW TQGRK', duration: '1:01' },
         { title: 'VLFGX UCALX VYMIG', duration: '5:01' },
@@ -75,14 +75,18 @@ var createSongRow = function(songNumber, songName, songLength) {
  
 window.onload = function() {
     setCurrentAlbum(albumPicasso);
+
     var albumList = [albumPicasso, albumMarconi, albumTuring];
-    var counter = 0;
+    var counter = 1;
+    var albumImage = document.getElementsByClassName('album-cover-art')[0];
     albumImage.addEventListener("click", function(event){
-        setCurrentAlbum(album)[counter];
-        if(counter<albumList.length){
-            counter++;
-        }else{
-            counter = 0;
+        
+        if(counter < albumList.length){
+             setCurrentAlbum(albumList[counter]);
+             counter++;
+             if(counter === albumList.length){
+                counter = 0;
+             }
         }
     });
 };
