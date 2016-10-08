@@ -77,7 +77,8 @@ body.album {
      background-color: rgb(210, 40, 123);
  }
  
-.album-song-button span {
+
+ .album-song-button span {
      line-height: 28px;
  }
 
