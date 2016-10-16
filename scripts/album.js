@@ -73,16 +73,23 @@ var createSongRow = function (songNumber, songName, songLength) {
     }
 };
 
-var findParentByClassName = function(element, targetClass) {
-    if (element) {
-        var currentParent = element.parentElement;
-        while (currentParent.className != targetClass && currentParent.className !== null) {
-            currentParent = currentParent.parentElement;
+var findParentByClassName = function(element, targetClass) { 
+    if (element.parentElement !== null) {
+        if (element) {
+            var currentParent = element.parentElement;
+            while (currentParent.className != targetClass && currentParent.className !== null) {
+                currentParent = currentParent.parentElement;
+            }
+            if (element.parentElement.className === null) {
+                return alert("No parent found with that class name");
+            }
+            return currentParent;
         }
-        return currentParent;
+    } else {
+        return alert("No parent found");
     }
 };
-
+    
 var getSongItem = function(element) {
     switch (element.className) {
         case 'album-song-button':
@@ -119,11 +126,8 @@ var clickHandler = function(targetElement) {
 
 var songListContainer = document.getElementsByClassName('album-view-song-list')[0];
 var songRows = document.getElementsByClassName('album-view-song-item');
-
 var playButtonTemplate = '<a class="album-song-button"><span class="ion-play"></span></a>';
-
 var pauseButtonTemplate = '<a class="album-song-button"><span class="ion-pause"></span></a>';
-
 var currentlyPlayingSong = null;
 
 window.onload = function() {
