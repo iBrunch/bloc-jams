@@ -54,26 +54,19 @@ var createSongRow = function (songNumber, songName, songLength) {
  
     var $row = $(template);
     
- 
-    var onHover = function(event) {
+    var hoverToggle = function(event){
         var songNumberCell = $(this).find('.song-item-number');
         var songNumber = songNumberCell.attr('data-song-number');
-
-        if (songNumber !== currentlyPlayingSong) {
+    
+        if (event.type == "mouseenter") {
             songNumberCell.html(playButtonTemplate);
-        }
-    };
-    var offHover = function(event) {
-        var songNumberCell = $(this).find('.song-item-number');
-        var songNumber = songNumberCell.attr('data-song-number');
-
-        if (songNumber !== currentlyPlayingSong) {
+        }else if (event.type == "mouseleave") {
             songNumberCell.html(songNumber);
         }
     };
  
     $row.find('.song-item-number').click(clickHandler);
-    $row.hover(onHover, offHover);
+    $row.hover(hoverToggle, hoverToggle);
     return $row;
 };
 
