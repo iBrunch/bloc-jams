@@ -84,6 +84,20 @@ var clickHandler = function(targetElement) {
 	}
  };
 
+var togglePlayFromPlayerBar = function () {
+    var currentlyPlayingCell = getSongNumberCell(currentlyPlayingSongNumber);
+    
+    if(currentSoundFile.isPaused()){
+        currentlyPlayingCell.html(pauseButtonTemplate);
+        $playerBarPlayPauseButton.html(playerBarPauseButton);
+        currentSoundFile.play();
+    } else {
+        currentlyPlayingCell.html(playButtonTemplate);
+        $playerBarPlayPauseButton.html(playerBarPlayButton);
+        currentSoundFile.pause();
+    }
+}
+
 var setCurrentAlbum = function (album) {
     currentAlbum = album;
     var $albumTitle = $('.album-view-title');
@@ -188,6 +202,7 @@ var currentVolume = 80;
 
 var $previousButton = $('.main-controls .previous');
 var $nextButton = $('.main-controls .next');
+var $playerBarPlayPauseButton = $('.main-controls .play-pause');
 
 $(document).ready(function() {
     setCurrentAlbum(albumPicasso);
@@ -196,6 +211,8 @@ $(document).ready(function() {
     var albumList = [albumPicasso, albumMarconi, albumTuring];
     var counter = 1;
     var albumImage = document.getElementsByClassName('album-cover-art')[0];
+    $playerBarPlayPauseButton.click(togglePlayFromPlayerBar);
+    
     albumImage.addEventListener("click", function(event){
         
         if(counter < albumList.length){
