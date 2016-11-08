@@ -100,51 +100,71 @@ var updateAlbumInfo = function (){
     
 }
 
-var nextSongPreviousSong = function (value) {
-    if(value.data === "next"){
-        var getLastSongNumber = function(index) {
+var currentSongIndex = 0;
+var changeCurrentSongIndex = function(buttonType){
+        currentSongIndex = trackIndex(currentAlbum, currentSongFromAlbum);
+        if(buttonType === "next"){currentSongIndex++;} else {currentSongIndex--;}
+}
+
+
+var getLastSongNumber = function(index, buttonType) {
+        if(buttonType === "next"){
             return index == 0 ? currentAlbum.songs.length : index;
-        };
-
-        var currentSongIndex = trackIndex(currentAlbum, currentSongFromAlbum);
-        currentSongIndex++;
-        
-        if (currentSongIndex >= currentAlbum.songs.length) {
-            currentSongIndex = 0;
+        } else {
+            return index == (currentAlbum.songs.length - 1) ? 1 : index + 2;
         }
+};
 
-        setSong(currentSongIndex + 1);
-        updateAlbumInfo();
 
-        var lastSongNumber = getLastSongNumber(currentSongIndex);
-        var $nextSongNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
-        var $lastSongNumberCell = getSongNumberCell(lastSongNumber);
+var checkForCurrentSongIndexReset = function(buttonType){
+        if(buttonType === "next"){
+            if (currentSongIndex >= currentAlbum.songs.length) {
+                currentSongIndex = 0;
+            }
+        } else {
+            if (currentSongIndex < 0) {
+                currentSongIndex = currentAlbum.songs.length - 1;
+            }
+        }
+}
+
+var updateSongItemCell = function(buttonType){
+    if(buttonType === "next"){
+        currentlyPlayingSongNumber = currentSongIndex + 1;
+        currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
+
+        var lastSongNumber = getLastSongNumber(currentSongIndex, "next");
+        var $nextSongNumberCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
+        var $lastSongNumberCell = $('.song-item-number[data-song-number="' + lastSongNumber + '"]');
 
         $nextSongNumberCell.html(pauseButtonTemplate);
         $lastSongNumberCell.html(lastSongNumber);
         
-    } else if (value.data === "previous"){
+    } else {
+        currentlyPlayingSongNumber = currentSongIndex + 1;
+        currentSongFromAlbum = currentAlbum.songs[currentSongIndex];
         
-        var getLastSongNumber = function(index) {
-            return index == (currentAlbum.songs.length - 1) ? 1 : index + 2;
-        };
-
-        var currentSongIndex = trackIndex(currentAlbum, currentSongFromAlbum);
-        currentSongIndex--;
-
-        if (currentSongIndex < 0) {
-            currentSongIndex = currentAlbum.songs.length - 1;
-        }
-
-        setSong(currentSongIndex + 1);
-        updateAlbumInfo();
-
-        var lastSongNumber = getLastSongNumber(currentSongIndex);
-        var $previousSongNumberCell = getSongNumberCell(currentlyPlayingSongNumber);
-        var $lastSongNumberCell = getSongNumberCell(lastSongNumber);
-
+        var lastSongNumber = getLastSongNumber(currentSongIndex, "previous");
+        var $previousSongNumberCell = $('.song-item-number[data-song-number="' + currentlyPlayingSongNumber + '"]');
+        var $lastSongNumberCell = $('.song-item-number[data-song-number="' + lastSongNumber + '"]');
+    
         $previousSongNumberCell.html(pauseButtonTemplate);
         $lastSongNumberCell.html(lastSongNumber);
+    }
+}
+
+
+var changeSong = function (buttonType) {
+    if(buttonType.data === "next"){
+        changeCurrentSongIndex("next");
+        checkForCurrentSongIndexReset("next");
+        updateSongItemCell("next");    
+        updatePlayerBarInfo("next");
+    } else { 
+        changeCurrentSongIndex("previous");
+        checkForCurrentSongIndexReset("previous");
+        updateSongItemCell("previous");    
+        updatePlayerBarInfo("previous");
     }
 }
 
@@ -162,8 +182,8 @@ var $nextButton = $('.main-controls .next');
 
 $(document).ready(function() {
     setCurrentAlbum(albumPicasso);
-    $previousButton.click("previous", nextSongPreviousSong);
-    $nextButton.click("next", nextSongPreviousSong);
+    $previousButton.click("previous", changeSong);
+    $nextButton.click("next", changeSong);
     var albumList = [albumPicasso, albumMarconi, albumTuring];
     var counter = 1;
     var albumImage = document.getElementsByClassName('album-cover-art')[0];
