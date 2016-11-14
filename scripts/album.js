@@ -203,7 +203,9 @@ var trackBarSetByClick = function(){
         var barWidth = $(this).width();
         var seekBarFillRatio = offsetX / barWidth;
 
-        seek(seekBarFillRatio * currentSoundFile.getDuration());
+        if($(this).parent().attr('class')=='seek-control'){
+            seek(seekBarFillRatio * currentSoundFile.getDuration());
+        }
         
         updateSeekPercentage($(this), seekBarFillRatio); 
     
@@ -216,9 +218,9 @@ var volumeBarSetByClick = function(){
         var barWidth = $(this).width();
         var seekBarFillRatio = offsetX / barWidth;    
         
-        globalVolume = seekBarFillRatio * 100;
-        setVolume(seekBarFillRatio * 100);
-
+            globalVolume = seekBarFillRatio * 100;
+            setVolume(seekBarFillRatio * 100);
+        
         updateSeekPercentage($(this), seekBarFillRatio); 
     });
 }
